@@ -24,13 +24,13 @@ namespace CinemaApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostTodoItem(CreateUserDto user)
+        public async Task<ActionResult<User>> PostTodoItem(CreateUserDto createUserDto)
         {
             User newUser = new User();
-            user.Name = user.Name;
-            user.Password = _crypto.cezarCode(user.Password);
+            createUserDto.Name = createUserDto.Name;
+            createUserDto.Password = _crypto.cezarCode(createUserDto.Password);
 
-            _context.UserItems.Add(newUser);
+            _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
             return Ok();

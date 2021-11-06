@@ -10,6 +10,16 @@ namespace CinemaApi.Models
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
-        public DbSet<User> UserItems { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Booking> Bookings { get; set; }
+
+        public DbSet<Film> Films { get; set; }
+
+        public DbSet<Room> Rooms { get; set; }
+
+        public DbSet<Showtime> Showtimes { get; set; }
+
     }
 }

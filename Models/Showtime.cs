@@ -3,12 +3,16 @@ using System.Collections.Generic;
 
 namespace CinemaApi.Models
 {
-    public class User
+    public class Showtime
     {
         public long Id { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
+
+        public DateTime Date { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }
+
+        public long FilmId { get; set; }
+
+        public long RoomId { get; set; }
     }
 }
