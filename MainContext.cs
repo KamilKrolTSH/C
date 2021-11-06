@@ -2,13 +2,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApi.Models
 {
-    public class TodoContext : DbContext
+    public class MainContext : DbContext
     {
-        public TodoContext(DbContextOptions<TodoContext> options)
+        public MainContext(DbContextOptions<MainContext> options)
             : base(options)
         {
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<User> UserItems { get; set; }
     }
 }

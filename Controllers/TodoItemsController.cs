@@ -13,9 +13,9 @@ namespace CinemaApi.Controllers
     [ApiController]
     public class TodoItemsController : ControllerBase
     {
-        private readonly TodoContext _context;
+        private readonly MainContext _context;
 
-        public TodoItemsController(TodoContext context)
+        public TodoItemsController(MainContext context)
         {
             _context = context;
         }
