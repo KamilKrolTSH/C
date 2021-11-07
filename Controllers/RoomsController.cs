@@ -11,59 +11,59 @@ namespace CinemaApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FilmsController : ControllerBase
+    public class RoomsController : ControllerBase
     {
         private readonly MainContext _context;
 
-        public FilmsController(MainContext context)
+        public RoomsController(MainContext context)
         {
 
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Film>>> GetFilms()
+        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return await _context.Films.ToListAsync();
+            return await _context.Rooms.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Film>> GetFilm(long id)
+        public async Task<ActionResult<Room>> GetRoom(long id)
         {
-            var film = await _context.Films.FindAsync(id);
+            var room = await _context.Rooms.FindAsync(id);
 
-            if (film == null)
+            if (room == null)
             {
                 return NotFound();
             }
 
-            return film;
+            return room;
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostTodoItem(CreateFilmDto createFilmDto)
+        public async Task<ActionResult<User>> PostTodoItem(CreateRoomDto createRoomDto)
         {
-            Film film = new Film();
+            Room room = new Room();
 
-            film.Title = createFilmDto.Title;
+            room.Number = room.Number;
 
-            film.Runtime = createFilmDto.Runtime;
+            room.Seets = room.Seets;
 
-            _context.Films.Add(film);
+            _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
 
-            return Ok(film);
+            return Ok(room);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFilm(long id, Film film)
+        public async Task<IActionResult> PutRoom(long id, Room room)
         {
-            if (id != film.Id)
+            if (id != room.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(film).State = EntityState.Modified;
+            _context.Entry(room).State = EntityState.Modified;
 
             try
             {
@@ -71,7 +71,7 @@ namespace CinemaApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FilmExists(id))
+                if (!RoomExists(id))
                 {
                     return NotFound();
                 }
@@ -85,32 +85,30 @@ namespace CinemaApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFilm(long id)
+        public async Task<IActionResult> DeleteRoom(long id)
         {
 
-            // var film = await _context.Films.FindAsync(id);
+            var room = _context.Rooms.Where(b => b.Id == id).Include(b => b.Showtimes).FirstOrDefault();
 
-            var film = _context.Films.Where(b => b.Id == id).Include(b => b.Showtimes).FirstOrDefault();
-
-            if (film == null)
+            if (room == null)
             {
                 return NotFound();
             }
 
-            if (film.Showtimes.Count > 0)
+            if (room.Showtimes.Count > 0)
             {
                 return BadRequest();
             }
 
-            _context.Films.Remove(film);
+            _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool FilmExists(long id)
+        private bool RoomExists(long id)
         {
-            return _context.Films.Any(e => e.Id == id);
+            return _context.Rooms.Any(e => e.Id == id);
         }
     }
 }

@@ -1,12 +1,17 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CinemaApi.Models
 {
     public class CreateFilmDto
     {
-        public long Id { get; set; }
+        [Required]
+        [StringLength(50)]
+        [MinLength(1)]
         public string Title { get; set; }
-        public int Runtime { get; set; }
 
+        [Required]
+        [Range(1, 500)]
+        public int Runtime { get; set; }
     }
 }
