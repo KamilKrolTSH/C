@@ -41,7 +41,7 @@ namespace CinemaApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostTodoItem(CreateBookingDto createBookingDto)
+        public async Task<ActionResult<Booking>> PostTodoItem(CreateBookingDto createBookingDto)
         {
             Booking booking = new Booking();
 

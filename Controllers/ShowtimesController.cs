@@ -41,7 +41,7 @@ namespace CinemaApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostTodoItem(CreateShowtimeDto createShowtimeDto)
+        public async Task<ActionResult<Showtime>> PostTodoItem(CreateShowtimeDto createShowtimeDto)
         {
             Showtime showtime = new Showtime();
 

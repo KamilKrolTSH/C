@@ -1,17 +1,21 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CinemaApi.Models
 {
-    public class MainContext : DbContext
+    public class MainContext : IdentityDbContext<ApplicationUser>
     {
         public MainContext(DbContextOptions<MainContext> options)
             : base(options)
         {
         }
 
-        public DbSet<TodoItem> TodoItems { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<TodoItem> TodoItems { get; set; }
 
         public DbSet<Booking> Bookings { get; set; }
 

@@ -41,7 +41,7 @@ namespace CinemaApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostTodoItem(CreateFilmDto createFilmDto)
+        public async Task<ActionResult<FilmsController>> PostTodoItem(CreateFilmDto createFilmDto)
         {
             Film film = new Film();
 
