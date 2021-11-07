@@ -13,6 +13,10 @@ namespace CinemaApi.Models
 
         public long FilmId { get; set; }
 
+        public Film Film { get; set; }
+
         public long RoomId { get; set; }
+
+        public Room Room { get; set; }
     }
 }

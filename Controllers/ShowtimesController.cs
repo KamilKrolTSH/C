@@ -24,7 +24,7 @@ namespace CinemaApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Showtime>>> GetShowtimes()
         {
-            return await _context.Showtimes.ToListAsync();
+            return await _context.Showtimes.Include((b) => b.Film).ToListAsync();
         }
 
         [HttpGet("{id}")]

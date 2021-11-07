@@ -139,3 +139,8 @@
 /Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 /Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Microsoft.Extensions.Identity.Core.dll
 /Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Microsoft.Extensions.Identity.Stores.dll
+/Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Castle.Core.dll
+/Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Proxies.dll
+/Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Microsoft.AspNetCore.JsonPatch.dll
+/Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+/Users/kamilkrol/Desktop/CinemaApi/bin/Debug/net5.0/Newtonsoft.Json.Bson.dll
