@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ShowtimesController : ControllerBase
@@ -21,23 +23,38 @@ namespace CinemaApi.Controllers
             _context = context;
         }
 
+        private DateTime getFilterDate()
+        {
+            DateTime currentDate = DateTime.Now;
+            TimeSpan minusTenMinutes = new TimeSpan(0, -10, 0);
+            return currentDate.Add(minusTenMinutes);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Showtime>>> GetShowtimes()
         {
-            return await _context.Showtimes.Include((b) => b.Film).ToListAsync();
+            var showtimes = await _context.Showtimes.Include((b) => b.Film).Include((b) => b.Room).ToListAsync();
+
+            return StatusCode(StatusCodes.Status200OK, new Response { Content = showtimes });
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Showtime>> GetShowtime(long id)
         {
-            var showtime = await _context.Showtimes.FindAsync(id);
+
+            var showtime = await _context.Showtimes.Include((b) => b.Film).Include((b) => b.Room).FirstOrDefaultAsync((b) => b.Id == id);
 
             if (showtime == null)
             {
                 return NotFound();
             }
 
-            return showtime;
+
+            var bookings = await _context.Bookings.Where((b) => b.ShowtimeId == showtime.Id).ToListAsync();
+
+            showtime.Bookings = bookings;
+
+            return StatusCode(StatusCodes.Status200OK, new Response { Content = showtime });
         }
 
         [HttpPost]

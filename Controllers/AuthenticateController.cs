@@ -64,7 +64,7 @@ namespace CinemaApi.Controllers
                     expiration = token.ValidTo
                 });
             }
-            return Unauthorized();
+            return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "INVALID_CREDENTIALS" });
         }
 
         [HttpPost]

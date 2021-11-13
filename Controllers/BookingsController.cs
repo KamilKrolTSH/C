@@ -41,6 +41,50 @@ namespace CinemaApi.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> LockASeat(LockASeatDto lockASeatDto)
+        {
+            var showtime = await _context.Showtimes.FindAsync(lockASeatDto.ShowtimeId);
+
+            if (showtime == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "SHOWTIME_DOES_NOT_EXISTS" });
+            }
+
+            string userName = HttpContext.User.Identity.Name;
+
+            var existingBooking = await _context.Bookings.Where((b) => b.ShowtimeId == showtime.Id && b.Seat == lockASeatDto.Seat).FirstOrDefaultAsync();
+
+            Booking booking = new Booking();
+
+            if (existingBooking != null)
+            {
+                if (existingBooking.Confirmed == true && showtime.Date <= DateTime.Now)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "SEAT_ALREADY_BOOKED" });
+                }
+
+                if (existingBooking.dateToConfirm <= DateTime.Now)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new Response { Error = "SEAT_IS_LOCKED" });
+                }
+                booking = existingBooking;
+            }
+
+            booking.dateToConfirm = DateTime.Now.Add(new TimeSpan(0, 1, 5));
+            booking.UserName = userName;
+            booking.Confirmed = false;
+            booking.Seat = lockASeatDto.Seat;
+            booking.ShowtimeId = showtime.Id;
+
+            var x = _context.Bookings.Update(booking);
+            await _context.SaveChangesAsync();
+
+            return StatusCode(StatusCodes.Status200OK, new Response { });
+
+        }
+
+
+        [HttpPost]
         public async Task<ActionResult<Booking>> PostTodoItem(CreateBookingDto createBookingDto)
         {
             Booking booking = new Booking();
