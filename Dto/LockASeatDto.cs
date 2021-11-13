@@ -6,7 +6,7 @@ namespace CinemaApi.Models
     public class LockASeatDto
     {
         [Required]
-        public string ShowtimeId { get; set; }
+        public long ShowtimeId { get; set; }
 
         [Required]
         public int Seat { get; set; }

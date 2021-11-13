@@ -21,25 +21,6 @@ namespace CinemaApi.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
-        {
-            return await _context.Bookings.ToListAsync();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Booking>> GetBooking(long id)
-        {
-            var booking = await _context.Bookings.FindAsync(id);
-
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return booking;
-        }
-
         [HttpPost]
         public async Task<ActionResult> LockASeat(LockASeatDto lockASeatDto)
         {
@@ -58,77 +39,71 @@ namespace CinemaApi.Controllers
 
             if (existingBooking != null)
             {
-                if (existingBooking.Confirmed == true && showtime.Date <= DateTime.Now)
+                if (existingBooking.Confirmed == true)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "SEAT_ALREADY_BOOKED" });
                 }
 
-                if (existingBooking.dateToConfirm <= DateTime.Now)
+                if (DateTime.Compare(existingBooking.dateToConfirm, DateTime.Now) > 0)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new Response { Error = "SEAT_IS_LOCKED" });
+                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "SEAT_IS_LOCKED" });
                 }
                 booking = existingBooking;
             }
 
-            booking.dateToConfirm = DateTime.Now.Add(new TimeSpan(0, 1, 5));
+            booking.dateToConfirm = DateTime.Now.Add(new TimeSpan(0, 1, 3));
             booking.UserName = userName;
             booking.Confirmed = false;
             booking.Seat = lockASeatDto.Seat;
             booking.ShowtimeId = showtime.Id;
 
-            var x = _context.Bookings.Update(booking);
+            _context.Bookings.Update(booking);
             await _context.SaveChangesAsync();
 
             return StatusCode(StatusCodes.Status200OK, new Response { });
-
         }
 
-
+        [Route("confirm")]
         [HttpPost]
-        public async Task<ActionResult<Booking>> PostTodoItem(CreateBookingDto createBookingDto)
+        public async Task<ActionResult> ConfirmBooking(LockASeatDto lockASeatDto)
         {
-            Booking booking = new Booking();
+            string userName = HttpContext.User.Identity.Name;
 
-            var showtime = await _context.Showtimes.FindAsync(createBookingDto.ShowtimeId);
-            var user = await _context.Users.FindAsync(createBookingDto.UserId);
+            var showtime = await _context.Showtimes.FindAsync(lockASeatDto.ShowtimeId);
 
-            if (user == null || showtime == null)
+            if (showtime == null)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "SHOWTIME_DOES_NOT_EXISTS" });
             }
 
-            var existingBooking = _context.Bookings.Where(b => b.ShowtimeId == createBookingDto.ShowtimeId && b.Seat == createBookingDto.Seat).FirstOrDefault();
-
-            if (existingBooking == null)
-            {
-                return BadRequest();
-            }
-
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
-            return Ok(booking);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(long id)
-        {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings.Where((b) => b.ShowtimeId == showtime.Id && b.Seat == lockASeatDto.Seat).FirstOrDefaultAsync();
 
             if (booking == null)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "FIRST_LOCK_RECORD" });
             }
 
-            _context.Bookings.Remove(booking);
+            if (booking.Confirmed == true)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "SEAT_ALREADY_CONFIRMED" });
+            }
+
+            if (booking.UserName != userName)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "CAN_NOT_CONFIRM_SOMEONE_ELSE_LOCKED_SEAT" });
+            }
+
+            if (DateTime.Compare(booking.dateToConfirm, DateTime.Now) < 0)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "FIRST_LOCK_RECORD" });
+            }
+
+            booking.Confirmed = true;
+
+            _context.Bookings.Update(booking);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool BookingExists(long id)
-        {
-            return _context.Bookings.Any(e => e.Id == id);
+            return StatusCode(StatusCodes.Status200OK, new Response { });
         }
     }
 }
