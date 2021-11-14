@@ -6,7 +6,7 @@ namespace CinemaApi.Models
     {
         public long Id { get; set; }
         public int Number { get; set; }
-        public int Seets { get; set; }
+        public int Seats { get; set; }
 
         public ICollection<Showtime> Showtimes { get; set; }
     }

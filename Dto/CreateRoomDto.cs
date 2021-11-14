@@ -11,6 +11,6 @@ namespace CinemaApi.Models
 
         [Required]
         [Range(1, 50)]
-        public int Seets { get; set; }
+        public int Seats { get; set; }
     }
 }

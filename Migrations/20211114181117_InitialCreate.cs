@@ -67,7 +67,7 @@ namespace CinemaApi.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<int>(type: "int", nullable: false),
-                    Seets = table.Column<int>(type: "int", nullable: false)
+                    Seats = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -255,7 +255,7 @@ namespace CinemaApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Rooms",
-                columns: new[] { "Id", "Number", "Seets" },
+                columns: new[] { "Id", "Number", "Seats" },
                 values: new object[,]
                 {
                     { 1L, 1, 10 },
@@ -265,12 +265,12 @@ namespace CinemaApi.Migrations
             migrationBuilder.InsertData(
                 table: "Showtimes",
                 columns: new[] { "Id", "Date", "FilmId", "RoomId" },
-                values: new object[] { 1L, new DateTime(2021, 11, 13, 22, 12, 9, 501, DateTimeKind.Local).AddTicks(7410), 1L, 1L });
+                values: new object[] { 1L, new DateTime(2021, 11, 14, 21, 11, 16, 840, DateTimeKind.Local).AddTicks(250), 1L, 1L });
 
             migrationBuilder.InsertData(
                 table: "Showtimes",
                 columns: new[] { "Id", "Date", "FilmId", "RoomId" },
-                values: new object[] { 2L, new DateTime(2021, 11, 14, 0, 12, 9, 505, DateTimeKind.Local).AddTicks(1640), 2L, 2L });
+                values: new object[] { 2L, new DateTime(2021, 11, 14, 23, 11, 16, 843, DateTimeKind.Local).AddTicks(4690), 2L, 2L });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

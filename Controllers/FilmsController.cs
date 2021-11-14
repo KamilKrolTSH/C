@@ -24,24 +24,30 @@ namespace CinemaApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Film>>> GetFilms()
         {
-            return await _context.Films.Include((b) => b.Showtimes).ToListAsync();
+            var films = await _context.Films.ToListAsync();
+
+            return StatusCode(StatusCodes.Status200OK, new Response { Content = films });
+
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Film>> GetFilm(long id)
-        {
-            var film = await _context.Films.FindAsync(id);
+        // [HttpGet("{id}")]
+        // public async Task<ActionResult<Film>> GetFilm(long id)
+        // {
+        //     var film = await _context.Films.FindAsync(id);
 
-            if (film == null)
-            {
-                return NotFound();
-            }
+        //     if (film == null)
+        //     {
+        //         return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "FILM_DOES_NOT_EXIST" });
+        //     }
 
-            return film;
-        }
+        //     var showtimes = await _context.Showtimes.Where((b) => b.FilmId == film.Id && b.Date > DateTime.Now).ToListAsync();
+        //     film.Showtimes = showtimes;
+
+        //     return StatusCode(StatusCodes.Status200OK, new Response { Content = film });
+        // }
 
         [HttpPost]
-        public async Task<ActionResult<FilmsController>> PostTodoItem(CreateFilmDto createFilmDto)
+        public async Task<ActionResult<FilmsController>> PostFilm(CreateFilmDto createFilmDto)
         {
             Film film = new Film();
 
@@ -52,65 +58,76 @@ namespace CinemaApi.Controllers
             _context.Films.Add(film);
             await _context.SaveChangesAsync();
 
-            return Ok(film);
+            return StatusCode(StatusCodes.Status200OK, new Response { Content = film });
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutFilm(long id, Film film)
-        {
-            if (id != film.Id)
-            {
-                return BadRequest();
-            }
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> PutFilm(long id, UpdateFilmDto film)
+        // {
+        //     if (id != film.Id)
+        //     {
+        //         return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "ID_CAN_NOT_BE_DIFFERENT_THAN_FILM_ID" });
+        //     }
 
-            _context.Entry(film).State = EntityState.Modified;
+        //     _context.Entry(film).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FilmExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //     var foundFilm = await _context.Films.FindAsync(id);
 
-            return NoContent();
-        }
+        //     if (foundFilm == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFilm(long id)
-        {
+        //     var showtimes = await _context.Showtimes.Where((b) => b.FilmId == film.Id && b.Date > DateTime.Now).ToListAsync();
 
-            // var film = await _context.Films.FindAsync(id);
+        //     if (showtimes.Count > 0)
+        //     {
+        //         return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "SHOWTIME_EXISTS" });
+        //     }
 
-            var film = _context.Films.Where(b => b.Id == id).Include(b => b.Showtimes).FirstOrDefault();
+        //     try
+        //     {
+        //         await _context.SaveChangesAsync();
+        //     }
+        //     catch (DbUpdateConcurrencyException)
+        //     {
+        //         if (!FilmExists(id))
+        //         {
+        //             return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "FILM_DOES_NOT_EXIST" });
+        //         }
+        //         else
+        //         {
+        //             throw;
+        //         }
+        //     }
 
-            if (film == null)
-            {
-                return NotFound();
-            }
+        //     return StatusCode(StatusCodes.Status200OK, new Response { });
+        // }
 
-            if (film.Showtimes.Count > 0)
-            {
-                return BadRequest();
-            }
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> DeleteFilm(long id)
+        // {
+        //     var film = _context.Films.Where(b => b.Id == id).Include(b => b.Showtimes).FirstOrDefault();
 
-            _context.Films.Remove(film);
-            await _context.SaveChangesAsync();
+        //     if (film == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return NoContent();
-        }
+        //     if (film.Showtimes.Count > 0)
+        //     {
+        //         return BadRequest();
+        //     }
 
-        private bool FilmExists(long id)
-        {
-            return _context.Films.Any(e => e.Id == id);
-        }
+        //     _context.Films.Remove(film);
+        //     await _context.SaveChangesAsync();
+
+        //     return NoContent();
+        // }
+
+        // private bool FilmExists(long id)
+        // {
+        //     return _context.Films.Any(e => e.Id == id);
+        // }
     }
 }

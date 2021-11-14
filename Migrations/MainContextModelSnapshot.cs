@@ -155,7 +155,7 @@ namespace CinemaApi.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    b.Property<int>("Seets")
+                    b.Property<int>("Seats")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -167,13 +167,13 @@ namespace CinemaApi.Migrations
                         {
                             Id = 1L,
                             Number = 1,
-                            Seets = 10
+                            Seats = 10
                         },
                         new
                         {
                             Id = 2L,
                             Number = 2,
-                            Seets = 20
+                            Seats = 20
                         });
                 });
 
@@ -205,14 +205,14 @@ namespace CinemaApi.Migrations
                         new
                         {
                             Id = 1L,
-                            Date = new DateTime(2021, 11, 13, 22, 12, 9, 501, DateTimeKind.Local).AddTicks(7410),
+                            Date = new DateTime(2021, 11, 14, 21, 11, 16, 840, DateTimeKind.Local).AddTicks(250),
                             FilmId = 1L,
                             RoomId = 1L
                         },
                         new
                         {
                             Id = 2L,
-                            Date = new DateTime(2021, 11, 14, 0, 12, 9, 505, DateTimeKind.Local).AddTicks(1640),
+                            Date = new DateTime(2021, 11, 14, 23, 11, 16, 843, DateTimeKind.Local).AddTicks(4690),
                             FilmId = 2L,
                             RoomId = 2L
                         });

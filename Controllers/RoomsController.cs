@@ -24,91 +24,93 @@ namespace CinemaApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return await _context.Rooms.ToListAsync();
+            var rooms = await _context.Rooms.ToListAsync();
+
+            return StatusCode(StatusCodes.Status200OK, new Response { Content = rooms });
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(long id)
-        {
-            var room = await _context.Rooms.FindAsync(id);
+        // [HttpGet("{id}")]
+        // public async Task<ActionResult<Room>> GetRoom(long id)
+        // {
+        //     var room = await _context.Rooms.FindAsync(id);
 
-            if (room == null)
-            {
-                return NotFound();
-            }
+        //     if (room == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return room;
-        }
+        //     return room;
+        // }
 
         [HttpPost]
-        public async Task<ActionResult<Room>> PostTodoItem(CreateRoomDto createRoomDto)
+        public async Task<ActionResult<RoomsController>> PostRoom(CreateRoomDto createRoomDto)
         {
             Room room = new Room();
 
-            room.Number = room.Number;
+            room.Number = createRoomDto.Number;
 
-            room.Seets = room.Seets;
+            room.Seats = createRoomDto.Seats;
 
             _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
 
-            return Ok(room);
+            return StatusCode(StatusCodes.Status200OK, new Response { Content = room });
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(long id, Room room)
-        {
-            if (id != room.Id)
-            {
-                return BadRequest();
-            }
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> PutRoom(long id, Room room)
+        // {
+        //     if (id != room.Id)
+        //     {
+        //         return BadRequest();
+        //     }
 
-            _context.Entry(room).State = EntityState.Modified;
+        //     _context.Entry(room).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //     try
+        //     {
+        //         await _context.SaveChangesAsync();
+        //     }
+        //     catch (DbUpdateConcurrencyException)
+        //     {
+        //         if (!RoomExists(id))
+        //         {
+        //             return NotFound();
+        //         }
+        //         else
+        //         {
+        //             throw;
+        //         }
+        //     }
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRoom(long id)
-        {
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> DeleteRoom(long id)
+        // {
 
-            var room = _context.Rooms.Where(b => b.Id == id).Include(b => b.Showtimes).FirstOrDefault();
+        //     var room = _context.Rooms.Where(b => b.Id == id).Include(b => b.Showtimes).FirstOrDefault();
 
-            if (room == null)
-            {
-                return NotFound();
-            }
+        //     if (room == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            if (room.Showtimes.Count > 0)
-            {
-                return BadRequest();
-            }
+        //     if (room.Showtimes.Count > 0)
+        //     {
+        //         return BadRequest();
+        //     }
 
-            _context.Rooms.Remove(room);
-            await _context.SaveChangesAsync();
+        //     _context.Rooms.Remove(room);
+        //     await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
 
-        private bool RoomExists(long id)
-        {
-            return _context.Rooms.Any(e => e.Id == id);
-        }
+        // private bool RoomExists(long id)
+        // {
+        //     return _context.Rooms.Any(e => e.Id == id);
+        // }
     }
 }
