@@ -58,30 +58,33 @@ namespace CinemaApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Showtime>> PostTodoItem(CreateShowtimeDto createShowtimeDto)
+        public async Task<ActionResult<Showtime>> PostShowtime(CreateShowtimeDto createShowtimeDto)
         {
             Showtime showtime = new Showtime();
 
             showtime.Date = createShowtimeDto.Date;
 
-            var film = await _context.Films.FindAsync(showtime.FilmId);
+            var film = await _context.Films.FindAsync(createShowtimeDto.FilmId);
 
             if (film == null)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "FILM_DOES_NOT_EXIST" });
             }
 
-            var room = await _context.Rooms.FindAsync(showtime.RoomId);
+            var room = await _context.Rooms.FindAsync(createShowtimeDto.RoomId);
 
             if (room == null)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Error = "ROOM_DOES_NOT_EXIST" });
             }
+
+            showtime.FilmId = createShowtimeDto.FilmId;
+            showtime.RoomId = createShowtimeDto.RoomId;
 
             _context.Showtimes.Add(showtime);
             await _context.SaveChangesAsync();
 
-            return Ok(showtime);
+            return StatusCode(StatusCodes.Status200OK, new Response { Content = showtime });
         }
 
         [HttpPut("{id}")]
